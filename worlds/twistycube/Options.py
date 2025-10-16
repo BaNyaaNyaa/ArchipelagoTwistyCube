@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, PerGameCommonOptions, Range
+from Options import Choice, PerGameCommonOptions, Range, Toggle
   
 class SizeOfCube(Choice):
     """
@@ -24,8 +24,17 @@ class StartingStickers(Range):
     range_end = 15
     default = 5
 
+class RandomizeColorLayout(Toggle):
+    """
+    Whether you want to use the default color layout (off) or randomize it (on).
+    """
+
+    display_name = "Randomize color layout"
+    default = 0
+
 @dataclass
 class TwistyCubeOptions(PerGameCommonOptions):
     size_of_cube: SizeOfCube
     starting_stickers: StartingStickers
+    randomize_color_layout: RandomizeColorLayout
     
