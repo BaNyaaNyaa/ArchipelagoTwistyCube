@@ -40,12 +40,15 @@ class TwistyCubeWorld(World):
     location_name_to_id = {name: data.id for name, data in location_table.items()}
         
     item_name_groups = item_groups
+
+    side_permutation: dict[str, str]
     
     ap_world_version = "0.0.1"
 
     def _get_twistycube_data(self):
         return {
             "seed_name": self.multiworld.seed,
+            "side_permutation": self.side_permutation
         }
 
     def create_items(self):
@@ -69,6 +72,12 @@ class TwistyCubeWorld(World):
         board = Region("Board", self.player, self.multiworld)
         
         size = self.options.size_of_cube.value
+
+        side_keys = ["U", "D", "R", "L", "F", "B"]
+        side_values = side_keys.copy()
+        if self.options.randomize_color_layout:
+            self.random.shuffle(side_values)
+        self.side_permutation = dict(zip(side_keys, side_values))
         
         all_locations = []
         
