@@ -11,6 +11,7 @@ class Color(StrEnum):
     BLUE = 'Blue'
     GREEN = 'Green'
 
+
 # Generates the properties, like items shuffle, for the cube
 class CubePuzzle:
     MAX_SIZE = 5
@@ -47,3 +48,16 @@ class CubePuzzle:
         if has_random_layout:
             self.random.shuffle(side_values)
         return dict(zip(side_keys, side_values))
+    
+    # Returns a map of locations with their requirements
+    def get_location_table(self, starting_stickers: int) -> dict[str, int]:
+        locations_to_id = {}
+        for i in range(starting_stickers, self.size*self.size*6+1):
+            locations_to_id[f"{i} Correct"] = i
+        return locations_to_id
+    
+    def get_goal_location(self) -> str:
+        return f"{self.size*self.size*6} Correct"
+
+
+LARGEST_CUBE = CubePuzzle(CubePuzzle.MAX_SIZE)

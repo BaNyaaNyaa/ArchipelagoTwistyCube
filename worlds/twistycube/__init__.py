@@ -75,15 +75,13 @@ class TwistyCubeWorld(World):
         menu = Region("Menu", self.player, self.multiworld)
         board = Region("Board", self.player, self.multiworld)
         
-        size = self.options.size_of_cube.value
         self.color_permutation = self.puzzle.get_color_permutation(bool(self.options.randomize_color_layout.value))
         
         all_locations = []
-        
-        for i in range(self.options.starting_stickers.value, size*size*6+1):
-            all_locations += [
-                TwistyCubeLocation(self.player, f"{i} Correct", location_table[f"{i} Correct"].id, i, board)
-            ]
+        for location, requirements in self.puzzle.get_location_table(self.options.starting_stickers.value).items():
+            all_locations.append(
+                TwistyCubeLocation(self.player, location, location_table[location].id, requirements, board)
+            )
 
         board.locations = all_locations
         
@@ -91,7 +89,7 @@ class TwistyCubeWorld(World):
             loc.access_rule = lambda state, count=loc.reqs: state.has("stickers", self.player, count)
 
         # Change the victory location to an event and place the Victory item there.
-        victory_location_name = f"{size*size*6} Correct"
+        victory_location_name = self.puzzle.get_goal_location()
         self.get_location(victory_location_name).address = None
         self.get_location(victory_location_name).place_locked_item(
             Item("Victory", ItemClassification.progression, None, self.player)
