@@ -12,6 +12,7 @@ class SizeOfCube(Choice):
     option_2x2x2 = 2
     option_3x3x3 = 3
     option_4x4x4 = 4
+    option_5x5x5 = 5
     default = 2
     
 class StartingStickers(Range):

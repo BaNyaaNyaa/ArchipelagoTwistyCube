@@ -12,7 +12,7 @@ class Color(StrEnum):
 
 # Generates the properties, like items shuffle, for the cube
 class CubePuzzle:
-    MAX_SIZE = 4
+    MAX_SIZE = 5
 
     def __init__(self, size: int):
         self.size = size
