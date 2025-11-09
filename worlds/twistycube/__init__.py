@@ -54,10 +54,11 @@ class TwistyCubeWorld(World):
             "color_permutation": self.color_permutation
         }
 
+    def generate_early(self):
+        self.puzzle = CubePuzzle(self.options.size_of_cube.value, self.random)
+
     def create_items(self):
         self.pool_contents = []
-        size = self.options.size_of_cube.value
-        self.puzzle = CubePuzzle(size)
         for item in self.puzzle.get_items():
             self.pool_contents.append(item)
 
@@ -74,7 +75,7 @@ class TwistyCubeWorld(World):
         board = Region("Board", self.player, self.multiworld)
         
         size = self.options.size_of_cube.value
-        self.color_permutation = self.puzzle.get_color_permutation(self.options.randomize_color_layout)
+        self.color_permutation = self.puzzle.get_color_permutation(bool(self.options.randomize_color_layout.value))
         
         all_locations = []
         

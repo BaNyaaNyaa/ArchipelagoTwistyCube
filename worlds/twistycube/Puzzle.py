@@ -1,5 +1,6 @@
 from collections import defaultdict
 from enum import StrEnum
+from random import Random
 
 # List of possible colors
 class Color(StrEnum):
@@ -14,8 +15,9 @@ class Color(StrEnum):
 class CubePuzzle:
     MAX_SIZE = 5
 
-    def __init__(self, size: int):
+    def __init__(self, size: int, random: Random | None = None):
         self.size = size
+        self.random = random
         self.colors = list(Color)
     
     # Get all the items associated to this cube
@@ -38,7 +40,9 @@ class CubePuzzle:
     # Returns a map containing the permutation of the color layout
     # If has_random_layout is false, returns the identity permutation (Each color maps to itself)
     def get_color_permutation(self, has_random_layout: bool) -> dict[str, str]:
-        side_keys = self.colors.copy
+        if self.random is None:
+            raise ValueError("The 'random' attribute has not been set.")
+        side_keys = self.colors.copy()
         side_values = side_keys.copy()
         if has_random_layout:
             self.random.shuffle(side_values)
