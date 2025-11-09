@@ -86,7 +86,6 @@ class TwistyCubeWorld(World):
         board.locations = all_locations
         
         for loc in board.locations:
-            reqs = loc.reqs
             loc.access_rule = lambda state, count=loc.reqs: state.has("stickers", self.player, count)
 
         # Change the victory location to an event and place the Victory item there.
@@ -138,8 +137,8 @@ class TwistyCubeWorld(World):
 
     def open_page(url):
         import webbrowser
-        import re
         import urllib.parse
+
         parsed_url = urllib.parse.urlparse(url)
         if parsed_url.scheme != "archipelago":
             raise ValueError("URL must be an Archipelago URL")
