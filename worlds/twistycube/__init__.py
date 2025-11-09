@@ -51,7 +51,8 @@ class TwistyCubeWorld(World):
     def _get_twistycube_data(self):
         return {
             "seed_name": self.multiworld.seed,
-            "color_permutation": self.color_permutation
+            "color_permutation": self.color_permutation,
+            "ap_world_version": self.ap_world_version
         }
 
     def generate_early(self):
