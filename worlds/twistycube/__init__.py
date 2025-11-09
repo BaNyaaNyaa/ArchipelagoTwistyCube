@@ -142,17 +142,20 @@ class TwistyCubeWorld(World):
     def open_page(url):
         import webbrowser
         import re
-        # Extract slot, pass, host, and port from the URL
-        # URL format: archipelago://slot:pass@host:port
-        match = re.match(r"archipelago://([^:]+):([^@]+)@([^:]+):(\d+)", url)
-        if not match:
-            raise ValueError("Invalid URL format")
+        import urllib.parse
+        parsed_url = urllib.parse.urlparse(url)
+        if parsed_url.scheme != "archipelago":
+            raise ValueError("URL must be an Archipelago URL")
+
+        query_parameters = {
+            "hostport": f"{parsed_url.hostname}:{parsed_url.port}",
+            "name": parsed_url.username
+        }
+        if parsed_url.password is not None:
+            query_parameters["password"] = parsed_url.password
         
-        slot, password, host, port = match.groups()
-        if password == "None":
-            webbrowser.open(f"http://cube-ap.netlify.app/?hostport={host}:{port}&name={slot}")
-        else:
-            webbrowser.open(f"http://cube-ap.netlify.app/?hostport={host}:{port}&name={slot}&password={password}")
+        target_url = f"http://cube-ap.netlify.app/?{urllib.parse.urlencode(query_parameters)}"
+        webbrowser.open(target_url)
 
     components.append(
         Component(
