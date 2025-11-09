@@ -6,6 +6,7 @@ from worlds.AutoWorld import WebWorld, World
 from .Items import item_table, item_groups, TwistyCubeItem as TwistyCubeItem
 from .Locations import TwistyCubeLocation, location_table
 from .Options import TwistyCubeOptions
+from .Puzzle import CubePuzzle
 
 
 from worlds.LauncherComponents import (
@@ -42,24 +43,25 @@ class TwistyCubeWorld(World):
     item_name_groups = item_groups
 
     side_permutation: dict[str, str]
+
+    puzzle: CubePuzzle
     
     ap_world_version = "0.0.2"
 
     def _get_twistycube_data(self):
         return {
             "seed_name": self.multiworld.seed,
-            "side_permutation": self.side_permutation
+            "color_permutation": self.color_permutation
         }
 
     def create_items(self):
         self.pool_contents = []
         size = self.options.size_of_cube.value
-        colors = ['White', 'Yellow', 'Red', 'Orange', 'Blue', 'Green']
-        for i, color in enumerate(colors):
-            for j in range(size * size):
-                name = f"{color} Sticker #{j+1}"
-                self.pool_contents.append(name)
-        for j in range(self.options.starting_stickers.value):
+        self.puzzle = CubePuzzle(size)
+        for item in self.puzzle.get_items():
+            self.pool_contents.append(item)
+
+        for _ in range(self.options.starting_stickers.value):
             name = self.random.choice(self.pool_contents)
             self.multiworld.push_precollected(self.create_item(name))
             self.pool_contents.remove(name)
@@ -72,12 +74,7 @@ class TwistyCubeWorld(World):
         board = Region("Board", self.player, self.multiworld)
         
         size = self.options.size_of_cube.value
-
-        side_keys = ["U", "D", "R", "L", "F", "B"]
-        side_values = side_keys.copy()
-        if self.options.randomize_color_layout:
-            self.random.shuffle(side_values)
-        self.side_permutation = dict(zip(side_keys, side_values))
+        self.color_permutation = self.puzzle.get_color_permutation(self.options.randomize_color_layout)
         
         all_locations = []
         
