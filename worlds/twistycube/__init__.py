@@ -43,7 +43,7 @@ class TwistyCubeWorld(World):
 
     side_permutation: dict[str, str]
     
-    ap_world_version = "0.0.1"
+    ap_world_version = "0.0.2"
 
     def _get_twistycube_data(self):
         return {
